@@ -1,4 +1,11 @@
-import { createContext, useState, ReactNode, useReducer } from 'react'
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useReducer,
+  useEffect,
+} from 'react'
+import { differenceInSeconds } from 'date-fns'
 
 import { Cycle, cyclesStateReducer } from '../reducers/cyclesState/reducer'
 import {
@@ -23,6 +30,24 @@ interface CyclesContextData {
 }
 
 export const CyclesContext = createContext({} as CyclesContextData)
+
+const STORED_CYCLES_STATE_NAME = '@timer:cycles-state-1.0.0'
+
+const defaultCyclesState = {
+  cycles: [],
+  activeCycleId: null,
+}
+
+function loadCyclesStateFromLocalStorage() {
+  const storedCyclesStateJSON = localStorage.getItem(STORED_CYCLES_STATE_NAME)
+
+  if (storedCyclesStateJSON) {
+    return JSON.parse(storedCyclesStateJSON)
+  }
+
+  return defaultCyclesState
+}
+
 interface CyclesContextProviderProps {
   children: ReactNode
 }
@@ -30,15 +55,28 @@ interface CyclesContextProviderProps {
 export function CyclesContextProvider({
   children,
 }: CyclesContextProviderProps) {
-  const [cyclesState, dispatch] = useReducer(cyclesStateReducer, {
-    cycles: [],
-    activeCycleId: null,
-  })
-
-  const [secondsAmountPassed, setSecondsAmountPassed] = useState(0)
+  const [cyclesState, dispatch] = useReducer(
+    cyclesStateReducer,
+    defaultCyclesState,
+    loadCyclesStateFromLocalStorage,
+  )
 
   const { cycles, activeCycleId } = cyclesState
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
+
+  const [secondsAmountPassed, setSecondsAmountPassed] = useState(() => {
+    if (activeCycle) {
+      return differenceInSeconds(new Date(), new Date(activeCycle.startDate))
+    }
+
+    return 0
+  })
+
+  useEffect(() => {
+    const cyclesStateJSON = JSON.stringify(cyclesState)
+
+    localStorage.setItem(STORED_CYCLES_STATE_NAME, cyclesStateJSON)
+  }, [cyclesState])
 
   function resetPageTitle() {
     document.title = 'Timer'

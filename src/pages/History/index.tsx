@@ -46,10 +46,10 @@ export function History() {
                 </td>
                 <td>
                   <time
-                    title={formatDateToString(cycle.startDate)}
-                    dateTime={cycle.startDate.toISOString()}
+                    title={formatDateToString(new Date(cycle.startDate))}
+                    dateTime={new Date(cycle.startDate).toISOString()}
                   >
-                    {formatDateDistanceToNow(cycle.startDate)}
+                    {formatDateDistanceToNow(new Date(cycle.startDate))}
                   </time>
                 </td>
                 <td>
