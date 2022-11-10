@@ -1,3 +1,5 @@
+import { produce } from 'immer'
+
 import { ActionTypes } from './actions'
 
 export interface Cycle {
@@ -16,39 +18,40 @@ interface CyclesState {
 
 export function cyclesStateReducer(state: CyclesState, action: any) {
   if (action.type === ActionTypes.CREATE_NEW_CYCLE) {
-    return {
-      ...state,
-      cycles: [...state.cycles, action.payload.newCycle],
-      activeCycleId: action.payload.newCycle.id,
-    }
+    return produce(state, (draft) => {
+      draft.cycles.push(action.payload.newCycle)
+      draft.activeCycleId = action.payload.newCycle.id
+    })
   }
 
   if (action.type === ActionTypes.INTERRUPT_CURRENT_CYCLE) {
-    return {
-      ...state,
-      cycles: state.cycles.map((cycle) => {
-        if (cycle.id === state.activeCycleId) {
-          return { ...cycle, interruptedDate: new Date() }
-        } else {
-          return cycle
-        }
-      }),
-      activeCycleId: null,
+    const currentCycleIndex = state.cycles.findIndex(
+      (cycle) => cycle.id === state.activeCycleId,
+    )
+
+    if (currentCycleIndex < 0) {
+      return state
     }
+
+    return produce(state, (draft) => {
+      draft.cycles[currentCycleIndex].interruptedDate = new Date()
+      draft.activeCycleId = null
+    })
   }
 
   if (action.type === ActionTypes.FINISH_CURRENT_CYCLE) {
-    return {
-      ...state,
-      cycles: state.cycles.map((cycle) => {
-        if (cycle.id === state.activeCycleId) {
-          return { ...cycle, finishedDate: new Date() }
-        } else {
-          return cycle
-        }
-      }),
-      activeCycleId: null,
+    const currentCycleIndex = state.cycles.findIndex(
+      (cycle) => cycle.id === state.activeCycleId,
+    )
+
+    if (currentCycleIndex < 0) {
+      return state
     }
+
+    return produce(state, (draft) => {
+      draft.cycles[currentCycleIndex].finishedDate = new Date()
+      draft.activeCycleId = null
+    })
   }
 
   return state
