@@ -15,6 +15,7 @@ interface NewCycleData {
 }
 
 interface CyclesContextData {
+  cycles: Cycle[]
   activeCycle: Cycle | undefined
   secondsAmountPassed: number
   createNewCycle: (data: NewCycleData) => void
@@ -91,6 +92,7 @@ export function CyclesContextProvider({
   return (
     <CyclesContext.Provider
       value={{
+        cycles,
         activeCycle,
         secondsAmountPassed,
         createNewCycle,
