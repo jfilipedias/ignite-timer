@@ -1,8 +1,10 @@
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { CyclesContext } from '../../../../context/CyclesContext'
 import { FormContainer, MinutesAmountInput, TaskInput } from './styles'
 
 const newCycleFormValidationSchema = zod.object({
@@ -16,6 +18,8 @@ const newCycleFormValidationSchema = zod.object({
 type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
 
 export function NewCycleForm() {
+  const { activeCycle } = useContext(CyclesContext)
+
   const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
