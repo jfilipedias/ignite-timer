@@ -8,7 +8,7 @@ export const HistoryContainer = styled.main`
 
   h1 {
     font-size: 1.5rem;
-    color: ${(props) => props.theme['gray-100']};
+    color: ${(props) => props.theme.colors['gray-100']};
   }
 `
 
@@ -24,8 +24,8 @@ export const HistoryList = styled.div`
 
     th {
       padding: 1rem;
-      background-color: ${(props) => props.theme['gray-600']};
-      color: ${(props) => props.theme['gray-100']};
+      background-color: ${(props) => props.theme.colors['gray-600']};
+      color: ${(props) => props.theme.colors['gray-100']};
       font-size: 0.875rem;
       line-height: 1.6;
       text-align: left;
@@ -43,8 +43,8 @@ export const HistoryList = styled.div`
 
     td {
       padding: 1rem;
-      background-color: ${(props) => props.theme['gray-700']};
-      border-top: 2px solid ${(props) => props.theme['gray-800']};
+      background-color: ${(props) => props.theme.colors['gray-700']};
+      border-top: 2px solid ${(props) => props.theme.colors['gray-800']};
       font-size: 0.875rem;
       line-height: 1.6;
 
@@ -80,6 +80,7 @@ export const Status = styled.span<StatusProps>`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background: ${(props) => props.theme[STATUS_COLORS[props.statusColor]]};
+    background: ${(props) =>
+      props.theme.colors[STATUS_COLORS[props.statusColor]]};
   }
 `

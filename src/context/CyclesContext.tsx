@@ -1,18 +1,17 @@
-import {
-  createContext,
-  useState,
-  ReactNode,
-  useReducer,
-  useEffect,
-} from 'react'
+import { createContext, useState, ReactNode, useReducer } from 'react'
 import { differenceInSeconds } from 'date-fns'
 
-import { Cycle, cyclesStateReducer } from '../reducers/cyclesState/reducer'
+import {
+  Cycle,
+  CyclesState,
+  cyclesStateReducer,
+} from '../reducers/cyclesState/reducer'
 import {
   createCycleAction,
   finishCurrentCycleAction,
   interruptCurrentCycleAction,
 } from '../reducers/cyclesState/actions'
+import { usePersistedState } from '../hooks/usePersistedState'
 
 interface NewCycleData {
   task: string
@@ -31,21 +30,9 @@ interface CyclesContextData {
 
 export const CyclesContext = createContext({} as CyclesContextData)
 
-const STORED_CYCLES_STATE_NAME = '@timer:cycles-state-1.0.0'
-
 const defaultCyclesState = {
   cycles: [],
   activeCycleId: null,
-}
-
-function loadCyclesStateFromLocalStorage() {
-  const storedCyclesStateJSON = localStorage.getItem(STORED_CYCLES_STATE_NAME)
-
-  if (storedCyclesStateJSON) {
-    return JSON.parse(storedCyclesStateJSON)
-  }
-
-  return defaultCyclesState
 }
 
 interface CyclesContextProviderProps {
@@ -55,10 +42,14 @@ interface CyclesContextProviderProps {
 export function CyclesContextProvider({
   children,
 }: CyclesContextProviderProps) {
+  const [storedCycles, setStoredCycles] = usePersistedState<CyclesState>(
+    '@ignite-timer:cycles-state-1.0.0',
+    defaultCyclesState,
+  )
+
   const [cyclesState, dispatch] = useReducer(
     cyclesStateReducer,
     defaultCyclesState,
-    loadCyclesStateFromLocalStorage,
   )
 
   const { cycles, activeCycleId } = cyclesState
@@ -71,12 +62,6 @@ export function CyclesContextProvider({
 
     return 0
   })
-
-  useEffect(() => {
-    const cyclesStateJSON = JSON.stringify(cyclesState)
-
-    localStorage.setItem(STORED_CYCLES_STATE_NAME, cyclesStateJSON)
-  }, [cyclesState])
 
   function resetPageTitle() {
     document.title = 'Timer'
