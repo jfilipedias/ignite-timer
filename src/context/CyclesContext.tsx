@@ -1,4 +1,10 @@
-import { createContext, useState, ReactNode, useReducer } from 'react'
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useReducer,
+  useEffect,
+} from 'react'
 import { differenceInSeconds } from 'date-fns'
 
 import {
@@ -47,10 +53,7 @@ export function CyclesContextProvider({
     defaultCyclesState,
   )
 
-  const [cyclesState, dispatch] = useReducer(
-    cyclesStateReducer,
-    defaultCyclesState,
-  )
+  const [cyclesState, dispatch] = useReducer(cyclesStateReducer, storedCycles)
 
   const { cycles, activeCycleId } = cyclesState
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
@@ -62,6 +65,10 @@ export function CyclesContextProvider({
 
     return 0
   })
+
+  useEffect(() => {
+    setStoredCycles(cyclesState)
+  }, [setStoredCycles, cyclesState])
 
   function resetPageTitle() {
     document.title = 'Timer'
