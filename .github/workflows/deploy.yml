@@ -27,5 +27,6 @@ jobs:
       - name: Deploy Ignite Timer
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           publish_dir: ./dist
