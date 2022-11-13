@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://jfilipedias.github.io/ignite-timer",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

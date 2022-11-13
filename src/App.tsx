@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 
 import { ThemeType } from './@types/styled'
@@ -20,9 +20,9 @@ export function App() {
     <ThemeProvider theme={theme}>
       <ThemeContextProvider onThemeChange={changeTheme}>
         <CyclesContextProvider>
-          <BrowserRouter>
+          <HashRouter>
             <Router />
-          </BrowserRouter>
+          </HashRouter>
         </CyclesContextProvider>
       </ThemeContextProvider>
 
