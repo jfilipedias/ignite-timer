@@ -24,8 +24,8 @@ jobs:
       - name: Build Ignite Timer
         run: npm run build
 
-      - name: Deploy Storybook
-        uses: peaceiris/actions-github-pages@v3.1.12
+      - name: Deploy Ignite Timer
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
