@@ -1,12 +1,36 @@
-import { useContext } from 'react'
+import { ChangeEvent, useContext, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { Minus, Plus } from 'phosphor-react'
 
 import { CyclesContext } from '../../../../context/CyclesContext'
-import { FormContainer, MinutesAmountInput, TaskInput } from './styles'
+import {
+  FormContainer,
+  MinutesAmountContainer,
+  MinutesAmountInput,
+  TaskInput,
+} from './styles'
 
 export function NewCycleForm() {
   const { activeCycle } = useContext(CyclesContext)
-  const { register } = useFormContext()
+  const { register, watch, setValue } = useFormContext()
+
+  const minutesAmountValue = watch('minutesAmount')
+
+  useEffect(() => {
+    register('minutesAmount', { max: 60, min: 1 })
+  }, [register])
+
+  function handleMinutesAmountDecrease() {
+    setValue('minutesAmount', minutesAmountValue - 1, { shouldValidate: true })
+  }
+
+  function handleMinutesAmountIncrease() {
+    setValue('minutesAmount', minutesAmountValue + 1, { shouldValidate: true })
+  }
+
+  function handleMinutesAmountChange(event: ChangeEvent<HTMLInputElement>) {
+    setValue('minutesAmount', event.target.value, { shouldValidate: true })
+  }
 
   return (
     <FormContainer>
@@ -19,15 +43,24 @@ export function NewCycleForm() {
       />
 
       <label htmlFor="minutesAmount">durante</label>
-      <MinutesAmountInput
-        id="minutesAmount"
-        type="number"
-        placeholder="00"
-        disabled={!!activeCycle}
-        min={1}
-        max={60}
-        {...register('minutesAmount', { valueAsNumber: true })}
-      />
+      <MinutesAmountContainer>
+        <button type="button" onClick={handleMinutesAmountDecrease}>
+          <Minus size={16} />
+        </button>
+
+        <MinutesAmountInput
+          id="minutesAmount"
+          type="number"
+          placeholder="00"
+          disabled={!!activeCycle}
+          value={minutesAmountValue}
+          onChange={handleMinutesAmountChange}
+        />
+
+        <button type="button" onClick={handleMinutesAmountIncrease}>
+          <Plus size={16} />
+        </button>
+      </MinutesAmountContainer>
 
       <span>minutos.</span>
     </FormContainer>
