@@ -64,6 +64,10 @@ export const MinutesAmountContainer = styled.div`
     &:focus {
       box-shadow: none;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 `
 
