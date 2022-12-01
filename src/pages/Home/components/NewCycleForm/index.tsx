@@ -2,13 +2,13 @@ import { ChangeEvent, useContext, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Minus, Plus } from 'phosphor-react'
 
-import { CyclesContext } from '../../../../context/CyclesContext'
 import {
   FormContainer,
   MinutesAmountContainer,
   MinutesAmountInput,
   TaskInput,
 } from './styles'
+import { CyclesContext } from '../../../../context/CyclesContext'
 
 const MIN_MINUTES_AMOUNT = 1
 const MAX_MINUTES_AMOUNT = 60
@@ -17,32 +17,35 @@ export function NewCycleForm() {
   const { activeCycle } = useContext(CyclesContext)
   const { register, watch, setValue } = useFormContext()
 
-  const minutesAmount = watch('minutesAmount')
+  const minutesAmountInputValue = watch('minutesAmount')
 
-  const isDecrementButtonDisabled = minutesAmount <= MIN_MINUTES_AMOUNT
-  const isIncrementButtonDisabled = minutesAmount >= MAX_MINUTES_AMOUNT
+  const isDecrementButtonDisabled =
+    minutesAmountInputValue <= MIN_MINUTES_AMOUNT
+  const isIncrementButtonDisabled =
+    minutesAmountInputValue >= MAX_MINUTES_AMOUNT
 
   useEffect(() => {
     register('minutesAmount')
   }, [register])
 
   function handleMinutesAmountDecrement() {
-    setValue('minutesAmount', minutesAmount - 1)
+    setValue('minutesAmount', minutesAmountInputValue - 1)
   }
 
   function handleMinutesAmountIncrement() {
-    setValue('minutesAmount', minutesAmount + 1)
+    setValue('minutesAmount', minutesAmountInputValue + 1)
   }
 
   function handleMinutesAmountChange(event: ChangeEvent<HTMLInputElement>) {
-    const eventValue = event.target.value
-    const newMinutesAmount = eventValue ? parseInt(eventValue, 10) : 0
+    const newMinutesAmount = event.target.value
+      ? parseInt(event.target.value, 10)
+      : 0
 
-    if (
-      (newMinutesAmount >= MIN_MINUTES_AMOUNT &&
-        newMinutesAmount <= MAX_MINUTES_AMOUNT) ||
-      newMinutesAmount === 0
-    ) {
+    const isNewMinutesAmountValid =
+      newMinutesAmount >= MIN_MINUTES_AMOUNT &&
+      newMinutesAmount <= MAX_MINUTES_AMOUNT
+
+    if (isNewMinutesAmountValid || newMinutesAmount === 0) {
       setValue('minutesAmount', newMinutesAmount)
     }
   }
@@ -72,7 +75,7 @@ export function NewCycleForm() {
           type="number"
           placeholder="0,"
           disabled={!!activeCycle}
-          value={minutesAmount}
+          value={minutesAmountInputValue.toString()}
           onChange={handleMinutesAmountChange}
         />
 
