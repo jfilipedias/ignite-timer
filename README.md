@@ -14,6 +14,14 @@ Para essa aplicação foram implementados validação de fomulário, criação d
   <img alt="Image apresentando a interface do projeto ignite timer" title="Ignite Timer" src="./docs/cover.png" />
 </div>
 
+## Extras
+
+Foram adicionadas algumas funcionalidades além do proposto durante o ignite:
+
+- [x] Tema light
+- [x] Input numérico customizado
+- [ ] Responsividade
+
 ## Getting Started
 
 Para executar esse projeto será necessário ter o [Node.js](https://nodejs.org/) e o [npm](https://www.npmjs.com/) instalados.
